@@ -1,4 +1,4 @@
-import random
+import secrets
 import string
 
 def generate_password(length=12, uppercase=True, lowercase=True, numbers=True, special_chars=True):
@@ -16,13 +16,13 @@ def generate_password(length=12, uppercase=True, lowercase=True, numbers=True, s
     if not character_sets:
         raise ValueError("At least one character set must be selected")
     
-    password = []
-    for charset in character_sets:
-        password.append(random.choice(charset))
-    
     all_chars = ''.join(character_sets)
-    password.extend(random.choices(all_chars, k=length - len(password)))
-    random.shuffle(password)
+    
+    password = [secrets.choice(charset) for charset in character_sets]
+    
+    password += [secrets.choice(all_chars) for _ in range(length - len(password))]
+    
+    secrets.SystemRandom().shuffle(password)
     
     return ''.join(password)
 
@@ -44,7 +44,7 @@ def get_user_input():
         return 12, True, True, True, True
 
 def main():
-    print("=== Password Generator ===")
+    print("=== Secure Password Generator ===")
     print("Configure your password requirements:")
     
     length, uppercase, lowercase, numbers, special_chars = get_user_input()
